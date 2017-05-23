@@ -57,7 +57,7 @@ class Lru {
   }
 
  protected:
-  void onDelete(v value) {}
+  virtual void onDelete(k key, v value) {}
 
  private:
   virtual bool DeleteTail() final {
@@ -66,7 +66,7 @@ class Lru {
     auto tail = root_->Pre;
     RemoveNode(tail);
     map_.erase(tail->Key);
-    onDelete(tail->Value);
+    onDelete(tail->Key, tail->Value);
     delete tail;
     return true;
   }

@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <cstdlib>
 
 #include "lru.hpp"
 
@@ -9,17 +10,17 @@ int main() {
   }
 
   auto print = [](int& value) {printf("%d,", value);};
-  printf("origin: cap %d, size %d: ", lru.GetCapacity(), lru.GetSize());
+  printf("origin: cap %lu, size %lu: ", lru.GetCapacity(), lru.GetSize());
   lru.ForEach(print);
   for (int i = 0; i < 20; ++i) {
-    int key = random()%10+1;
+    int key = std::rand()%10+1;
     int resut = lru.Find(key);
     printf("\nFind: %d, result %d,  : ", key, resut);
     lru.ForEach(print);
   }
 
   lru.Clear();
-  printf("\norigin: cap %d, size %d", lru.GetCapacity(), lru.GetSize());
+  printf("\norigin: cap %lu, size %lu", lru.GetCapacity(), lru.GetSize());
   lru.ForEach(print);
   return 0;
 }
