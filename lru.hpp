@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <map>
 #include <functional>
+#include <tuple>
 
 template <typename k, typename v>
 class Lru {
@@ -19,11 +20,11 @@ class Lru {
   Lru(std::size_t cap = 8) : capacity_(cap) {}
   virtual ~Lru() { Clear(); }
 
-  std::size_t GetCapacity() { return capacity_; }
+  virtual std::size_t GetCapacity() final { return capacity_; }
 
-  std::size_t GetSize() { return map_.size(); }
+  virtual std::size_t GetSize() final { return map_.size(); }
 
-  void Clear() { while (DeleteTail()) {} }
+  virtual void Clear() final { while (DeleteTail()) {} }
 
   virtual void ForEach(std::function<void (v& value)> foreach) final {
     if (root_ == nullptr) return;
@@ -44,16 +45,16 @@ class Lru {
     map_.insert(std::make_pair(key, p));
   }
 
-  v Find(k key) {
+  virtual std::tuple<v, bool> Find(k key) final {
     auto it = map_.find(key);
-    if (it == map_.end()) return v();
+    if (it == map_.end()) return std::make_tuple(v(), false);
 
     Node* p = it->second;
     if (p != root_) {
       RemoveNode(p);
       PushFront(p);
     }
-    return p->Value;
+    return std::make_tuple(p->Value, true);
   }
 
  protected:

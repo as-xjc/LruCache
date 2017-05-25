@@ -9,13 +9,19 @@ int main() {
     lru.Push(i, i);
   }
 
-  auto print = [](int& value) {printf("%d,", value);};
+  auto print = [](int& value) { printf("%d,", value); };
   printf("origin: cap %lu, size %lu: ", lru.GetCapacity(), lru.GetSize());
   lru.ForEach(print);
   for (int i = 0; i < 20; ++i) {
-    int key = std::rand()%10+1;
-    int resut = lru.Find(key);
-    printf("\nFind: %d, result %d,  : ", key, resut);
+    int key = std::rand() % 10 + 1;
+    int result = 0;
+    bool get = false;
+    std::tie(result, get) = lru.Find(key);
+    if (get) {
+      printf("\nFind: %d, result %d,  : ", key, result);
+    } else {
+      printf("\nFind: %d, result not found.  ", key);
+    }
     lru.ForEach(print);
   }
 
